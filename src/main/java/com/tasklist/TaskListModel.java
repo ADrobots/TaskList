@@ -11,8 +11,8 @@ import java.util.List;
 
 import javax.swing.AbstractListModel;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -23,6 +23,9 @@ private TaskList list;
 private JSONObject object;
 private JSONArray array;
 private JSONParser parser;
+private static final String filePath = "./src/main/resources/Tasks.json";
+//private static final String filePath = "./target/classes/Tasks.json";
+
 	
 	public TaskListModel(TaskList list) {
 		this.list = list;
@@ -40,14 +43,14 @@ private JSONParser parser;
 	}
 	
 	public void write() throws IOException {
-		//FileWriter file=new FileWriter("./src/main/resources/Tasks.json");
 		FileWriter file=new FileWriter("./src/main/resources/Tasks.json");
+		//FileWriter file=new FileWriter("./target/classes/Tasks.json");
 		array=new JSONArray();
 		try {
 				for(int i=0; i<list.size(); i++) {
 					object=new JSONObject();
 					object.put("info", list.elementAt(i));
-					array.put(object);
+					array.add(object);
 				}
 				file.write(array.toString());
 		
@@ -61,29 +64,20 @@ private JSONParser parser;
 	}
 	
 	public void read() throws FileNotFoundException, IOException, ParseException {
-		
-		File file=new File("./src/main/resources/Tasks.json");
-		BufferedReader br = new BufferedReader(new FileReader(file));
-		String st = br.readLine();
-        String jsonFile = "";
-        while (st != null) {
-            jsonFile += st;
-            st = br.readLine();
-        }
-        //List<String> list=Arrays.asList(jsonFile);
-        //System.out.println(list);
         
-        
+		FileReader reader = new FileReader(filePath);
+		 
+        JSONParser jsonParser = new JSONParser();
+        JSONArray a = (JSONArray) jsonParser.parse(reader);
 		
-		//JSONArray a = (JSONArray) parser.parse(new FileReader("./src/main/resources/Tasks.json"));
-		//JSONObject a = (JSONObject) parser.parse(new FileReader("./target/classes/com/tasklist/Tasks.json"));
-		/*for (Object o : a)
+		for (Object o : a)
 		  {
 		    JSONObject person = (JSONObject) o;
 
 		    String name = (String) person.get("info");
-		    System.out.println(name);
-		  }*/
+		    list.add(name);
+		    //System.out.println(name);
+		  }
 		
 	}
 	
