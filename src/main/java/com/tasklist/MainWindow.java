@@ -8,7 +8,7 @@ import javax.swing.*;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
-import org.json.simple.parser.ParseException;
+//import org.json.simple.parser.ParseException;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -50,10 +50,19 @@ public class MainWindow extends JFrame{
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		/*try {
+			todoListModel.read();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		
 		setContentPane( getMainContentPane() );
 		
@@ -217,6 +226,7 @@ public class MainWindow extends JFrame{
 	}*/
 	
 	private Icon createIcon(String iconfilename) {
+		System.out.println(getClass().getResource("/"+iconfilename));
 		return new ImageIcon(
 				getClass().
 				getResource("/"+iconfilename));
