@@ -105,7 +105,7 @@ private static final String filePath = "./src/main/resources/Tasks.json";
 		File direct=new File("direct");
 		direct.mkdir();
 		
-		File dataJson=new File("Tasks.json");
+		File dataJson=new File(direct+"/Tasks.json");
 		FileWriter files=new FileWriter(dataJson);
 		
 		array=new JsonArray();
