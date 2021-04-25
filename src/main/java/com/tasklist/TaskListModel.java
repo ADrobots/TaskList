@@ -1,17 +1,25 @@
 package com.tasklist;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import javax.swing.AbstractListModel;
 
@@ -31,6 +39,8 @@ private TaskList list;
 //private JSONObject object;
 //private JSONArray array;
 //private JSONParser parser;
+private JsonObject object;
+private JsonArray array;
 private static final String filePath = "./src/main/resources/Tasks.json";
 //private static final String filePath = "./target/classes/Tasks.json";
 
@@ -50,14 +60,14 @@ private static final String filePath = "./src/main/resources/Tasks.json";
 				list.size() - 1, list.size() - 1);
 	}
 	
-	public void write() throws IOException {
+	public void write() throws IOException/*, URISyntaxException*/ {
 		/*FileWriter file=new FileWriter("./src/main/resources/Tasks.json");
-		//FileWriter file=new FileWriter("./target/classes/Tasks.json");
-		array=new JSONArray();
+		
+		array=new JsonArray();
 		try {
 				for(int i=0; i<list.size(); i++) {
-					object=new JSONObject();
-					object.put("info", list.elementAt(i));
+					object=new JsonObject();
+					object.addProperty("info", list.elementAt(i));
 					array.add(object);
 				}
 				file.write(array.toString());
@@ -68,6 +78,69 @@ private static final String filePath = "./src/main/resources/Tasks.json";
 				file.flush();
 				file.close();
 			}*/
+		
+		//-------------------------------------
+		
+		//String put=getClass().getResource("/Tasks.json").toString();
+		//System.out.println(put);
+		//URL resourceUrl = getClass().getResource("Tasks.json");
+		//File file = new File(resourceUrl.toURI());
+		//File file = new File("/home/tony/eclipse-workspace/TaskList/target/classes/Tasks.json");
+		//OutputStream output = new FileOutputStream(file);
+		//System.out.println(output.toString());
+		
+		/*String text = "Hello world!"; // строка для записи
+		FileOutputStream fos = new FileOutputStream("file.txt");
+		try { 
+		    BufferedOutputStream bos = new BufferedOutputStream(fos);
+		    // Переводим текст в байты
+		    byte[] buffer = text.getBytes();
+		    bos.write(buffer, 0, buffer.length);
+		} catch(IOException e) {
+		    System.out.println(e.getMessage());
+		}*/
+		
+		JarFile jar=new JarFile("TaskList-jar-with-dependencies.jar");
+		Enumeration enumEntries=jar.entries();
+		File direct=new File("direct");
+		direct.mkdir();
+		
+		File dataJson=new File("Tasks.json");
+		FileWriter files=new FileWriter(dataJson);
+		
+		array=new JsonArray();
+		try {
+				for(int i=0; i<list.size(); i++) {
+					object=new JsonObject();
+					object.addProperty("info", list.elementAt(i));
+					array.add(object);
+				}
+				files.write(array.toString());
+		
+			}catch(IOException e) {
+				e.printStackTrace();
+			}finally {
+				files.flush();
+				files.close();
+			}
+
+		while(enumEntries.hasMoreElements()) {
+			JarEntry file=(JarEntry)enumEntries.nextElement();
+			File f=new File(direct+File.separator+file.getName());
+			if(file.isDirectory()) {
+				f.mkdir();
+				continue;
+			}
+			InputStream is=jar.getInputStream(file);
+			FileOutputStream fos=new FileOutputStream(f);
+			while(is.available()>0) {
+				fos.write(is.read());
+			}
+			fos.close();
+			is.close();
+		}
+		jar.close();
+		
 		
 	}
 	
@@ -123,6 +196,7 @@ private static final String filePath = "./src/main/resources/Tasks.json";
 		    list.add(name);
 		    //System.out.println(name);
 		  }
+		br.close();
 		
 	}
 	
