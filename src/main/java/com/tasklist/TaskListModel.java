@@ -15,6 +15,10 @@ import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
@@ -102,10 +106,27 @@ private static final String filePath = "./src/main/resources/Tasks.json";
 		
 		JarFile jar=new JarFile("TaskList-jar-with-dependencies.jar");
 		Enumeration enumEntries=jar.entries();
-		File direct=new File("direct");
-		direct.mkdir();
+		//File direct=new File("direct");
+		//direct.mkdir();
+
+		while(enumEntries.hasMoreElements()) {
+			JarEntry file=(JarEntry)enumEntries.nextElement();
+			File f=new File(/*direct+File.separator+*/file.getName());
+			if(file.isDirectory()) {
+				f.mkdir();
+				continue;
+			}
+			InputStream is=jar.getInputStream(file);
+			FileOutputStream fos=new FileOutputStream(f);
+			while(is.available()>0) {
+				fos.write(is.read());
+			}
+			fos.close();
+			is.close();
+		}
+		jar.close();
 		
-		File dataJson=new File(direct+"/Tasks.json");
+		File dataJson=new File(/*direct+*/"Tasks.json");
 		FileWriter files=new FileWriter(dataJson);
 		
 		array=new JsonArray();
@@ -123,23 +144,13 @@ private static final String filePath = "./src/main/resources/Tasks.json";
 				files.flush();
 				files.close();
 			}
-
-		while(enumEntries.hasMoreElements()) {
-			JarEntry file=(JarEntry)enumEntries.nextElement();
-			File f=new File(direct+File.separator+file.getName());
-			if(file.isDirectory()) {
-				f.mkdir();
-				continue;
-			}
-			InputStream is=jar.getInputStream(file);
-			FileOutputStream fos=new FileOutputStream(f);
-			while(is.available()>0) {
-				fos.write(is.read());
-			}
-			fos.close();
-			is.close();
-		}
-		jar.close();
+		
+		List<String> lines = Arrays.asList("Manifest-Version: 1.0", "Archiver-Version: Plexus Archiver", "Created-By: Apache Maven", "Built-By: work", "Build-Jdk: 1.8.0_131", "Main-Class: com.tasklist.Run");
+		Path file = Paths.get(/*direct+*/"manifest.txt");
+		Files.write(file, lines, StandardCharsets.UTF_8);
+		
+		Runtime rt = Runtime.getRuntime();
+		rt.exec(new String[]{"cmd.exe","/c",/*"start",*/"jar -cfm TaskList-jar-with-dependencies.jar manifest.txt com META-INF Tasks.json *.png"});
 		
 		
 	}
