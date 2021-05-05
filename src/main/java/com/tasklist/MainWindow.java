@@ -8,17 +8,24 @@ import javax.swing.*;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
+import org.apache.commons.io.FileUtils;
+
 //import org.json.simple.parser.ParseException;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 import static javax.swing.BorderFactory.createEmptyBorder;
 import static javax.swing.Box.createVerticalStrut;
+
+
 
 public class MainWindow extends JFrame{
 	private static final long serialVersionUID = 1L;
@@ -32,6 +39,7 @@ public class MainWindow extends JFrame{
 	private JScrollPane taskListScrollPane;
 	private JPanel taskListControls;
 	private JButton deleteButton;
+	private JButton writeButton;
 	private JList<String> taskList;
 	private JLabel statusBar;
 		
@@ -68,6 +76,26 @@ public class MainWindow extends JFrame{
 		
 		setTitle("Todo list");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+            	try {
+					Files.delete(Paths.get("up.png"));
+					Files.delete(Paths.get("down.png"));
+	        		Files.delete(Paths.get("bin.png"));
+	        		Files.delete(Paths.get("diary.png"));
+	        		Files.delete(Paths.get("manifest.txt"));
+	        		Files.delete(Paths.get("Tasks.json"));
+	        		/*FileUtils.deleteDirectory(new File("com"));*/
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        		
+                System.out.println("Frame closing");
+            }
+        });
 		
 		setMinimumSize(new Dimension(250, 250));
 		pack();
@@ -139,6 +167,12 @@ public class MainWindow extends JFrame{
 			button.setAlignmentX(CENTER_ALIGNMENT);
 			taskListControls.add(button);
 			
+			JButton button2 = getWriteButton();
+			button2.setAlignmentX(CENTER_ALIGNMENT);
+			taskListControls.add(button2);
+			
+			
+			
 			taskListControls.add(createVerticalStrut(10));
 		}
 		
@@ -157,6 +191,27 @@ public class MainWindow extends JFrame{
 					String task = todoListModel.getElementAt(removeIndex);
 					todoListModel.removeAt(getTaskList().getSelectedIndex());
 					//sessionDao.delete(task);
+					/*try {
+						todoListModel.write();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}*/
+				}
+			});
+		}
+
+		return deleteButton;
+	}
+	
+	private JButton getWriteButton() {
+		if (writeButton == null) {
+			writeButton = new JButton("Write");
+			writeButton.setIcon(createIcon("diary.png"));
+
+			writeButton.addMouseListener(new MouseAdapter(){
+				@Override
+				public void mouseClicked(MouseEvent e) {
 					try {
 						todoListModel.write();
 					} catch (IOException e1) {
@@ -167,7 +222,7 @@ public class MainWindow extends JFrame{
 			});
 		}
 
-		return deleteButton;
+		return writeButton;
 	}
 
 
@@ -184,12 +239,12 @@ public class MainWindow extends JFrame{
 
                         todoListModel.add(getNewTaskField().getText().trim());
                         //sessionDao.save(task);
-                        try {
+                        /*try {
 							todoListModel.write();
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
-						}
+						}*/
 
                         getNewTaskField().setText("");
 

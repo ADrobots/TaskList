@@ -152,6 +152,14 @@ private static final String filePath = "./src/main/resources/Tasks.json";
 		Runtime rt = Runtime.getRuntime();
 		rt.exec(new String[]{"cmd.exe","/c",/*"start",*/"jar -cfm TaskList-jar-with-dependencies.jar manifest.txt com META-INF Tasks.json *.png"});
 		
+		/*Files.delete(Paths.get("up.png"));
+		Files.delete(Paths.get("down.png"));
+		Files.delete(Paths.get("bin.png"));
+		Files.delete(Paths.get("diary.png"));
+		Files.delete(Paths.get("/com"));*/
+		
+		
+		
 		
 	}
 	
