@@ -8,9 +8,9 @@ import javax.swing.*;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
-import org.apache.commons.io.FileUtils;
 
-//import org.json.simple.parser.ParseException;
+
+
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -32,7 +32,7 @@ public class MainWindow extends JFrame{
 
 	//private SessionDao sessionDao = new SessionDao(HibernateService.getSessionFactory());
 	
-	private JPanel mainContentPane;
+	private JPanel mainContentPane;	
 	private JPanel newTaskControls;
 	private JButton addTaskButton;
 	private JTextField newTaskField;
@@ -40,6 +40,7 @@ public class MainWindow extends JFrame{
 	private JPanel taskListControls;
 	private JButton deleteButton;
 	private JButton writeButton;
+	private JButton viewCustomers;
 	private JList<String> taskList;
 	private JLabel statusBar;
 		
@@ -59,18 +60,6 @@ public class MainWindow extends JFrame{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		/*try {
-			todoListModel.read();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
 		
 		setContentPane( getMainContentPane() );
 		
@@ -80,20 +69,12 @@ public class MainWindow extends JFrame{
 		addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-            	try {
-					Files.delete(Paths.get("up.png"));
-					Files.delete(Paths.get("down.png"));
-	        		Files.delete(Paths.get("bin.png"));
-	        		Files.delete(Paths.get("diary.png"));
-	        		Files.delete(Paths.get("manifest.txt"));
-	        		Files.delete(Paths.get("Tasks.json"));
-	        		/*FileUtils.deleteDirectory(new File("com"));*/
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+            	
+            	todoListModel.deleteFile(new File("com"));        	
+            	todoListModel.deleteFile(new File("META-INF"));
         		
                 System.out.println("Frame closing");
+				
             }
         });
 		
@@ -154,6 +135,7 @@ public class MainWindow extends JFrame{
 	}
 
 	private Component getTasksListControls() {
+
 		if (taskListControls == null) {
 			taskListControls = new JPanel();
 			
@@ -171,6 +153,10 @@ public class MainWindow extends JFrame{
 			button2.setAlignmentX(CENTER_ALIGNMENT);
 			taskListControls.add(button2);
 			
+			JButton button3 = viewCustomers();
+			button3.setAlignmentX(CENTER_ALIGNMENT);
+			taskListControls.add(button3);
+			
 			
 			
 			taskListControls.add(createVerticalStrut(10));
@@ -178,6 +164,7 @@ public class MainWindow extends JFrame{
 		
 		return taskListControls;
 	}
+
 
 	private JButton getDeleteButton() {
 		if (deleteButton == null) {
@@ -203,7 +190,7 @@ public class MainWindow extends JFrame{
 
 		return deleteButton;
 	}
-	
+
 	private JButton getWriteButton() {
 		if (writeButton == null) {
 			writeButton = new JButton("Write");
@@ -224,7 +211,6 @@ public class MainWindow extends JFrame{
 
 		return writeButton;
 	}
-
 
     private JButton getAddTaskButton() {
         if (addTaskButton == null) {
@@ -257,6 +243,27 @@ public class MainWindow extends JFrame{
         return addTaskButton;
     }
 
+    private JButton viewCustomers() {
+    	if (viewCustomers == null) {
+    		viewCustomers = new JButton("Customers");
+
+    		viewCustomers.addMouseListener(new MouseAdapter(){
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    /*JFrame f=new JFrame();
+                    f.setTitle("Customers");
+                    f.setVisible(true);
+                    
+                    JPanel fp=new JPanel();*/
+                	
+                	new CustomerWindow();
+                    
+                }
+            });
+        }
+    	return viewCustomers;
+    }
+    
 	/*private JLabel getStatusBar() {
 		if (statusBar == null) {
 			statusBar = new JLabel("Number of tasks: 0");
@@ -293,4 +300,5 @@ public class MainWindow extends JFrame{
 			todoListModel.add(task.getTask());
 		}
 	}*/
+	
 }

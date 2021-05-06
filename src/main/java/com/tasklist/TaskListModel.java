@@ -219,6 +219,28 @@ private static final String filePath = "./src/main/resources/Tasks.json";
 		
 	}
 	
+	public void deleteFile(File path) {
+		if (path.isDirectory()) {
+		    for (File f : path.listFiles()) {
+			if (f.isDirectory()) deleteFile(f);
+			else f.delete();
+		    }
+		}
+		path.delete();
+		
+		try {
+			Files.delete(Paths.get("up.png"));
+			Files.delete(Paths.get("down.png"));
+    		Files.delete(Paths.get("bin.png"));
+    		Files.delete(Paths.get("diary.png"));
+    		Files.delete(Paths.get("manifest.txt"));
+    		Files.delete(Paths.get("Tasks.json"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public int getSize() {
 		return list.size();
 	}
