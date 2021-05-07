@@ -6,94 +6,64 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class CustomerWindow extends JFrame{
+public class CustomerWindow{
 	
-	private JPanel mainContentPane;	
-	private JPanel newTaskControls;
-	private JTextField newTaskField;
-	private JButton addTaskButton;
+	private JFrame jf;
+	private JPanel panelAddCustomer;
+	private JPanel panelListCustomers;
+	
+	private JTextField textFieldEmail;
+	private JTextField textFieldCompany;
+	private JTextField textFieldCustomer;
+	private JTextField textFieldInformation;
+	
+	private JButton button;
 	
 	public CustomerWindow() {
 		
-		setTitle("Customers");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setVisible(true);
-		setMinimumSize(new Dimension(250, 250));
-		setContentPane( getMainContentPane() );
-	}
-	
-	private Container getMainContentPane() {
-		if (mainContentPane == null) {
-			mainContentPane = new JPanel();
-			mainContentPane.setLayout(new BorderLayout());
-			
-			mainContentPane.add(getNewTaskControls(), BorderLayout.NORTH);
-			
-		}
-		return mainContentPane;
-	}
-	private Component getNewTaskControls() {
-		if (newTaskControls == null) {
-			newTaskControls = new JPanel();
-			
-			BorderLayout layout = new BorderLayout();
-			newTaskControls.setLayout(layout);
-			layout.setHgap(5);
-			newTaskControls.setBorder(createEmptyBorder(10,10,10,10));
-			
-			newTaskControls.add(getNewTaskField());
-			newTaskControls.add(getAddTaskButton());
-			newTaskControls.add(new JButton());
-		}
+		jf=new JFrame();
+		jf.setTitle("Customers");
+		jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		jf.setVisible(true);
+		jf.setMinimumSize(new Dimension(550, 550));
 		
-		return newTaskControls;
+		
+		panelAddCustomer=new JPanel();
+		panelAddCustomer.setLayout(new FlowLayout(FlowLayout.LEFT,3,3)); //Components aligned to left
+		textFieldEmail=new JTextField("Email",30);
+		textFieldCompany=new JTextField("Company",30);
+		textFieldCustomer=new JTextField("Manager",30);
+		textFieldInformation=new JTextField("Information",30);
+		button=new JButton("Добавить");
+		
+		panelAddCustomer.add(textFieldEmail,BorderLayout.EAST);
+		panelAddCustomer.add(textFieldCompany,BorderLayout.EAST);
+		panelAddCustomer.add(textFieldCustomer,BorderLayout.EAST);
+		panelAddCustomer.add(textFieldInformation,BorderLayout.EAST);
+		panelAddCustomer.add(button);
+		
+		
+		panelListCustomers=new JPanel();
+		panelListCustomers.add(new JTextField(5));
+		panelListCustomers.add(button);
+		
+		jf.add( panelAddCustomer );
+		jf.add(panelListCustomers);
+		
+
 	}
 	
-	private JTextField getNewTaskField() {
-		if (newTaskField == null) {
-			newTaskField = new JTextField();
-		}
-		newTaskField.setSize(50, 100);
-		return newTaskField;
-	}
 	
 	
-	private JButton getAddTaskButton() {
-        if (addTaskButton == null) {
-            addTaskButton = new JButton("Add");
-            //addTaskButton.setIcon(createIcon("diary.png"));
-
-            addTaskButton.addMouseListener(new MouseAdapter(){
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    if (getNewTaskField().getText().length() > 0) {
-                        String task = getNewTaskField().getText().trim();
-
-                        //todoListModel.add(getNewTaskField().getText().trim());
-                        //sessionDao.save(task);
-                        /*try {
-							todoListModel.write();
-						} catch (IOException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}*/
-
-                        getNewTaskField().setText("");
-
-                        //getTaskList().setSelectedIndex(getTaskList().getModel().getSize()-1);
-                    }
-                }
-            });
-        }
-
-        return addTaskButton;
-	}
+	
 }
