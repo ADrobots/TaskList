@@ -12,7 +12,9 @@ import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.List;
 
+import javax.mail.MessagingException;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
@@ -28,7 +30,10 @@ import javax.swing.JTextField;
 
 public class CustomerWindow{
 	
-	private JLabel mailLabelCustomer;
+	private JTextField mailTextCustomer;
+	private JTextField findCustomer;
+	private JTextArea sendTextArea;
+	private JButton searchCustomer;
 	private JButton createCustomer;
 	private JButton deleteCustomer;
 	private JButton sendCustomer;
@@ -36,6 +41,8 @@ public class CustomerWindow{
 	private JTextField companyCustomer;
 	private JList jList;
 	private DefaultListModel<String> model;
+	
+	Sender tlsSender;
 	
 	public CustomerWindow() {
 		
@@ -170,8 +177,10 @@ public class CustomerWindow{
 		model = new DefaultListModel<String>();
 		jList=new JList(model);
 		northListCustomer.add(new JScrollPane(jList));
-		leftSouthListCustomer.add(new JTextArea(2, 50));
+		sendTextArea=new JTextArea(2,50);
+		leftSouthListCustomer.add(sendTextArea);
 		
+		tlsSender=new Sender("prommetall66@gmail.com", "ronaldo_85");
 		sendCustomer=new JButton("Send");
 		rightSouthListCustomer.add(sendCustomer);
 		sendCustomer.addMouseListener(new MouseListener() {
@@ -179,8 +188,17 @@ public class CustomerWindow{
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
 				//model.remove(jList.getSelectedIndex());
+				String str=model.get(jList.getSelectedIndex());
+				String[] arrStr=str.split(" ");
 				
-				System.out.println(model.get(jList.getSelectedIndex()));
+				System.out.println(arrStr[0]);
+				
+				try {
+					tlsSender.send("", sendTextArea.getText(), "prommetall66@gmail.com", arrStr[0]);
+				} catch (MessagingException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 
 			public void mousePressed(MouseEvent e) {
@@ -208,15 +226,73 @@ public class CustomerWindow{
 			});
 		rightSouthListCustomer.add(new JLabel("Status"));
 		
-		mailLabelCustomer=new JLabel();
-		mailLabelCustomer.setName(model.get(jList.getSelectedIndex()));
-		statusCustomer.add(mailLabelCustomer);
-		statusCustomer.add(new JLabel("company"));
-		statusCustomer.add(new JLabel("manager"));
-		statusCustomer.add(new JLabel("comments"));
+		//mailTextCustomer=new JTextField("-",15);
+		//mailTextCustomer.setEditable(false);
+		//statusCustomer.add(mailTextCustomer);
+		//statusCustomer.add(new JLabel("company"));
+		//statusCustomer.add(new JLabel("manager"));
+		final JTextArea commentsTextAreaCustomer=new JTextArea(2,8);
+		commentsTextAreaCustomer.setEditable(false);
+		statusCustomer.add(commentsTextAreaCustomer);
 		
-		southStatusCustomer.add(new JTextField("Find...",10));
-		southStatusCustomer.add(new JButton("Search"));
+		findCustomer=new JTextField("Find...",10);
+		southStatusCustomer.add(findCustomer);
+		searchCustomer=new JButton("Search");
+		southStatusCustomer.add(searchCustomer);
+		searchCustomer.addMouseListener(new MouseListener() {
+			
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				//mailTextCustomer.setText(findCustomer.getText());
+				//jList.setSelectedIndex(1);
+				commentsTextAreaCustomer.setText("");
+				String str1=findCustomer.getText();
+				for (int i = 0; i <=jList.getModel().getSize()-1; i++) {
+					String str2=String.valueOf(jList.getModel().getElementAt(i));
+					
+					if(str2.contains(str1)) {
+						//mailTextCustomer.setText(str2);
+						//System.out.println("find");
+						
+						commentsTextAreaCustomer.append(str2+"\n");
+						jList.setSelectedIndex(i);
+						
+					}/*else {
+						//mailTextCustomer.setText("-");
+						commentsTextAreaCustomer.setText("-");
+					}*/
+		             //System.out.println(String.valueOf(jList.getModel().getElementAt(i)));
+		        }
+					
+	
+				
+				
+			}
+
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			
+
+			});
+		
 		
 		jf.getContentPane().add(mainPanel);
 		
