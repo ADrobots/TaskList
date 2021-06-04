@@ -12,6 +12,9 @@ import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 import javax.mail.MessagingException;
@@ -28,6 +31,9 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 public class CustomerWindow{
 	
 	private JTextField mailTextCustomer;
@@ -41,6 +47,8 @@ public class CustomerWindow{
 	private JTextField companyCustomer;
 	private JList jList;
 	private DefaultListModel<String> model;
+	private JsonArray array;
+	private JsonObject object;
 	
 	Sender tlsSender;
 	
@@ -48,6 +56,40 @@ public class CustomerWindow{
 		
 		JFrame jf=new JFrame("Hello");
 		jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		
+		jf.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent){
+        		
+            	/*for (int i = 0; i <=jList.getModel().getSize()-1; i++) {
+					
+		             System.out.println(String.valueOf(jList.getModel().getElementAt(i)));
+		        }*/
+            	
+            	File dataJson=new File("Customers.json");
+            	/*FileWriter files=new FileWriter(dataJson);
+        		
+        		array=new JsonArray();
+        		try {
+        				for(int i = 0; i <=jList.getModel().getSize()-1; i++) {
+        					object=new JsonObject();
+        					object.addProperty("info", String.valueOf(jList.getModel().getElementAt(i)));
+        					array.add(object);
+        				}
+        				files.write(array.toString());
+        		
+        			}catch(IOException e) {
+        				e.printStackTrace();
+        			}finally {
+        				files.flush();
+        				files.close();
+        			}*/
+            	
+                System.out.println("Hello closing");
+				
+            }
+        });
+		
 		jf.setPreferredSize(new Dimension(300,300));
 		jf.setVisible(true);
 		jf.pack();
