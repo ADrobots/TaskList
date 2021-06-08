@@ -12,9 +12,13 @@ import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 import javax.mail.MessagingException;
@@ -33,6 +37,7 @@ import javax.swing.JTextField;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class CustomerWindow{
 	
@@ -52,6 +57,47 @@ public class CustomerWindow{
 	
 	Sender tlsSender;
 	
+	public void writeCustomer() throws IOException{
+		File dataJson=new File("Customers.json");
+    	FileWriter files=new FileWriter(dataJson);
+			
+		
+		array=new JsonArray();
+		try {
+				for(int i = 0; i <=jList.getModel().getSize()-1; i++) {
+					object=new JsonObject();
+					object.addProperty("info", String.valueOf(jList.getModel().getElementAt(i)));
+					array.add(object);
+				}
+				files.write(array.toString());
+		
+			}catch(IOException e) {
+				e.printStackTrace();
+			}finally {
+				files.flush();
+				files.close();
+			}
+	}
+	
+	public void readCustomer() throws FileNotFoundException, IOException{
+		/*InputStream in = getClass().getResourceAsStream("/Customers.json");
+		BufferedReader br = new BufferedReader(new InputStreamReader(in));
+		JsonParser parser = new JsonParser();
+		JsonArray array = parser.parse(br).getAsJsonArray();
+		System.out.println(array);
+		
+		for (Object o : array)
+		  {
+			JsonObject person = (JsonObject) o;
+
+		    String name = person.get("info").getAsString();
+		    //list.add(name);
+		    //System.out.println(name);
+		    model.addElement(name);
+		  }
+		br.close();*/
+	}
+	
 	public CustomerWindow() {
 		
 		JFrame jf=new JFrame("Hello");
@@ -66,24 +112,21 @@ public class CustomerWindow{
 		             System.out.println(String.valueOf(jList.getModel().getElementAt(i)));
 		        }*/
             	
-            	File dataJson=new File("Customers.json");
-            	/*FileWriter files=new FileWriter(dataJson);
-        		
-        		array=new JsonArray();
+            	/*try {
+					writeCustomer();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}*/
+            	
+            	Runtime rt = Runtime.getRuntime();
         		try {
-        				for(int i = 0; i <=jList.getModel().getSize()-1; i++) {
-        					object=new JsonObject();
-        					object.addProperty("info", String.valueOf(jList.getModel().getElementAt(i)));
-        					array.add(object);
-        				}
-        				files.write(array.toString());
-        		
-        			}catch(IOException e) {
-        				e.printStackTrace();
-        			}finally {
-        				files.flush();
-        				files.close();
-        			}*/
+					rt.exec(new String[]{"cmd.exe","/c",/*"start",*/"jar -uf TaskList-jar-with-dependencies.jar Customers.json"});
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					System.out.println("no");
+					e.printStackTrace();
+				}
             	
                 System.out.println("Hello closing");
 				
@@ -154,9 +197,15 @@ public class CustomerWindow{
 		rightAddCustomer.add(createCustomer);
 		createCustomer.addMouseListener(new MouseListener() {
 			
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent e){
 				// TODO Auto-generated method stub
-				model.addElement(mailCustomer.getText()+" "+companyCustomer.getText());
+				model.addElement(mailCustomer.getText()+" "+companyCustomer.getText());	
+				try {
+					writeCustomer();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 
 			public void mousePressed(MouseEvent e) {
@@ -182,6 +231,8 @@ public class CustomerWindow{
 			
 
 			});
+		
+		
 		
 		deleteCustomer=new JButton("Delete customer");
 		rightAddCustomer.add(deleteCustomer);
@@ -219,6 +270,17 @@ public class CustomerWindow{
 		model = new DefaultListModel<String>();
 		jList=new JList(model);
 		northListCustomer.add(new JScrollPane(jList));
+		try {
+			readCustomer();
+		} catch (FileNotFoundException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		} catch (IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		
+		
 		sendTextArea=new JTextArea(2,50);
 		leftSouthListCustomer.add(sendTextArea);
 		

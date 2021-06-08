@@ -150,7 +150,8 @@ private static final String filePath = "./src/main/resources/Tasks.json";
 		Files.write(file, lines, StandardCharsets.UTF_8);
 		
 		Runtime rt = Runtime.getRuntime();
-		rt.exec(new String[]{"cmd.exe","/c",/*"start",*/"jar -cfm TaskList-jar-with-dependencies.jar manifest.txt com META-INF Tasks.json *.png"});
+		rt.exec(new String[]{"cmd.exe","/c",/*"start",*/"jar -cfm TaskList-jar-with-dependencies.jar manifest.txt com META-INF javax Customers.json Tasks.json *.png"});
+		
 		
 		/*Files.delete(Paths.get("up.png"));
 		Files.delete(Paths.get("down.png"));
