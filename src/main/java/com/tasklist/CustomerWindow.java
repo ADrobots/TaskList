@@ -58,7 +58,7 @@ public class CustomerWindow{
 	Sender tlsSender;
 	
 	public void writeCustomer() throws IOException{
-		File dataJson=new File("Customers.json");
+		File dataJson=new File("CustomersSource.json");
     	FileWriter files=new FileWriter(dataJson);
 			
 		
@@ -79,8 +79,13 @@ public class CustomerWindow{
 			}
 	}
 	
+	public void addToArchive() throws IOException{
+		Runtime rt1 = Runtime.getRuntime();
+		rt1.exec(new String[]{"cmd.exe","/c",/*"start",*/"jar -uf TaskList-jar-with-dependencies.jar Customers.json"});
+	}
+	
 	public void readCustomer() throws FileNotFoundException, IOException{
-		/*InputStream in = getClass().getResourceAsStream("/Customers.json");
+		InputStream in = getClass().getResourceAsStream("/Customers.json");
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		JsonParser parser = new JsonParser();
 		JsonArray array = parser.parse(br).getAsJsonArray();
@@ -95,7 +100,7 @@ public class CustomerWindow{
 		    //System.out.println(name);
 		    model.addElement(name);
 		  }
-		br.close();*/
+		br.close();
 	}
 	
 	public CustomerWindow() {
@@ -112,22 +117,18 @@ public class CustomerWindow{
 		             System.out.println(String.valueOf(jList.getModel().getElementAt(i)));
 		        }*/
             	
-            	/*try {
+            	try {
 					writeCustomer();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}*/
-            	
-            	Runtime rt = Runtime.getRuntime();
-        		try {
-					rt.exec(new String[]{"cmd.exe","/c",/*"start",*/"jar -uf TaskList-jar-with-dependencies.jar Customers.json"});
+				}
+            	/*try {
+					addToArchive();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					System.out.println("no");
 					e.printStackTrace();
-				}
-            	
+				}*/
                 System.out.println("Hello closing");
 				
             }

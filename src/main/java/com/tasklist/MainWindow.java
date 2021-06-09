@@ -73,6 +73,7 @@ public class MainWindow extends JFrame{
             	todoListModel.deleteFile(new File("com"));        	
             	todoListModel.deleteFile(new File("META-INF"));
             	todoListModel.deleteFile(new File("javax"));
+            	todoListModel.deleteFile(new File("CustomersSource.json"));
             	todoListModel.deleteFile(new File("Customers.json"));
         		
                 System.out.println("Frame closing");

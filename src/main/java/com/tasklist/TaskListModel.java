@@ -64,6 +64,38 @@ private static final String filePath = "./src/main/resources/Tasks.json";
 				list.size() - 1, list.size() - 1);
 	}
 	
+	void copy(File source, File target) throws IOException {
+
+
+
+        InputStream in = new FileInputStream(source);
+
+        OutputStream out = new FileOutputStream(target);
+
+    
+
+        // Copy the bits from instream to outstream
+
+        byte[] buf = new byte[1024];
+
+        int len;
+
+
+
+        while ((len = in.read(buf)) > 0) {
+
+            out.write(buf, 0, len);
+
+        }
+
+
+
+        in.close();
+
+        out.close();
+
+    }
+	
 	public void write() throws IOException/*, URISyntaxException*/ {
 		/*FileWriter file=new FileWriter("./src/main/resources/Tasks.json");
 		
@@ -125,6 +157,13 @@ private static final String filePath = "./src/main/resources/Tasks.json";
 			is.close();
 		}
 		jar.close();
+		
+		File dataCustomers=new File("CustomersSource.json");
+		File dataJsonCustomer=new File("Customers.json");
+		
+		copy(dataCustomers,dataJsonCustomer);
+		
+		
 		
 		File dataJson=new File(/*direct+*/"Tasks.json");
 		FileWriter files=new FileWriter(dataJson);
