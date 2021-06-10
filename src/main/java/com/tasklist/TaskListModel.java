@@ -161,7 +161,10 @@ private static final String filePath = "./src/main/resources/Tasks.json";
 		File dataCustomers=new File("CustomersSource.json");
 		File dataJsonCustomer=new File("Customers.json");
 		
-		copy(dataCustomers,dataJsonCustomer);
+		if(dataCustomers.exists()){
+			copy(dataCustomers,dataJsonCustomer);
+		}
+		
 		
 		
 		
