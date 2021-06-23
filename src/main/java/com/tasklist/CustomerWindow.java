@@ -285,7 +285,7 @@ public class CustomerWindow{
 		sendTextArea=new JTextArea(2,50);
 		leftSouthListCustomer.add(sendTextArea);
 		
-		tlsSender=new Sender("prommetall66@gmail.com", "ronaldo_85");
+		tlsSender=new Sender("dav@pkp96.ru", "boening_747");
 		sendCustomer=new JButton("Send");
 		rightSouthListCustomer.add(sendCustomer);
 		sendCustomer.addMouseListener(new MouseListener() {
@@ -299,7 +299,7 @@ public class CustomerWindow{
 				System.out.println(arrStr[0]);
 				
 				try {
-					tlsSender.send("", sendTextArea.getText(), "prommetall66@gmail.com", arrStr[0]);
+					tlsSender.send("", sendTextArea.getText(), "dav@pkp96.ru", arrStr[0]);
 				} catch (MessagingException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

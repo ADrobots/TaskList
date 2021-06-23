@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
@@ -39,6 +40,8 @@ import com.google.gson.JsonParser;
 
 
 public class TaskListModel extends AbstractListModel<String>{
+
+private String[] customersArray;	
 private TaskList list;
 //private JSONObject object;
 //private JSONArray array;
@@ -199,10 +202,7 @@ private static final String filePath = "./src/main/resources/Tasks.json";
 		Files.delete(Paths.get("down.png"));
 		Files.delete(Paths.get("bin.png"));
 		Files.delete(Paths.get("diary.png"));
-		Files.delete(Paths.get("/com"));*/
-		
-		
-		
+		Files.delete(Paths.get("/com"));*/	
 		
 	}
 	
@@ -261,6 +261,41 @@ private static final String filePath = "./src/main/resources/Tasks.json";
 		br.close();
 		
 	}
+	
+	public String[] readCustomers() throws FileNotFoundException, IOException {
+		List<String> listCustomers=new ArrayList<String>();
+		InputStream in = getClass().getResourceAsStream("/Customers.json");
+		BufferedReader br = new BufferedReader(new InputStreamReader(in));
+		JsonParser parser = new JsonParser();
+		JsonArray array = parser.parse(br).getAsJsonArray();
+		System.out.println(array);
+		
+		for (Object o : array)
+		  {
+			JsonObject person = (JsonObject) o;
+
+		    String name = person.get("info").getAsString();
+		    listCustomers.add(name);
+		    //System.out.println(listCustomers);
+		  }
+		br.close();
+		
+		//System.out.println(listCustomers.size());
+		
+		customersArray=new String[listCustomers.size()];
+		for(int i=0; i<listCustomers.size(); i++) {
+			customersArray[i]=listCustomers.get(i);
+		}
+		
+		/*for(int i=0; i<customersArray.length; i++) {
+			System.out.println(customersArray[i]);
+		}*/
+		
+		return customersArray;
+		
+		
+	}
+	
 	
 	public void deleteFile(File path) {
 		if (path.isDirectory()) {

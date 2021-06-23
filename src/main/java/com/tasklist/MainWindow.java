@@ -4,6 +4,7 @@ package com.tasklist;
 
 import com.tasklist.TaskList;
 
+import javax.mail.MessagingException;
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
@@ -15,6 +16,7 @@ import javax.swing.event.ListDataListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -43,6 +45,10 @@ public class MainWindow extends JFrame{
 	private JButton viewCustomers;
 	private JList<String> taskList;
 	private JLabel statusBar;
+	private JComboBox jtf;
+	private Sender tlsSender;
+	private JTextArea area;
+	private DefaultListModel<String> model;
 		
 	private TaskList todoList;
 	private TaskListModel todoListModel;
@@ -93,7 +99,7 @@ public class MainWindow extends JFrame{
 			mainContentPane.add(getNewTaskControls(), BorderLayout.NORTH);
 			mainContentPane.add(getTasksListScrollPane(), BorderLayout.CENTER);
 			mainContentPane.add(getTasksListControls(), BorderLayout.EAST);
-			//mainContentPane.add(getStatusBar(), BorderLayout.SOUTH);
+			mainContentPane.add(getStatusBar(), BorderLayout.SOUTH);
 			
 		}
 		return mainContentPane;
@@ -108,12 +114,32 @@ public class MainWindow extends JFrame{
 			layout.setHgap(5);
 			newTaskControls.setBorder(createEmptyBorder(10,0,10,10));
 			
+			String[] s;
+			try {
+				s = todoListModel.readCustomers();
+				jtf=new JComboBox(s);
+				
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			//System.out.println(jtf.getSelectedItem());
+			//jtf.setBorder(createEmptyBorder(0,0,0,0));
 			newTaskControls.add(getNewTaskField(), BorderLayout.CENTER);
+			newTaskControls.add(jtf, BorderLayout.SOUTH);
 			newTaskControls.add(getAddTaskButton(), BorderLayout.EAST);
+			
+			
+			
 		}
 		
 		return newTaskControls;
 	}
+	
 
 	private JTextField getNewTaskField() {
 		if (newTaskField == null) {
@@ -226,7 +252,7 @@ public class MainWindow extends JFrame{
                     if (getNewTaskField().getText().length() > 0) {
                         String task = getNewTaskField().getText().trim();
 
-                        todoListModel.add(getNewTaskField().getText().trim());
+                        todoListModel.add(jtf.getSelectedItem()+" :  "+getNewTaskField().getText().trim());
                         //sessionDao.save(task);
                         /*try {
 							todoListModel.write();
@@ -267,8 +293,8 @@ public class MainWindow extends JFrame{
     	return viewCustomers;
     }
     
-	/*private JLabel getStatusBar() {
-		if (statusBar == null) {
+	private /*JLabel*/JPanel getStatusBar() {
+		/*if (statusBar == null) {
 			statusBar = new JLabel("Number of tasks: 0");
 			todoListModel.addListDataListener(new ListDataListener() {
 				@Override
@@ -287,8 +313,62 @@ public class MainWindow extends JFrame{
 			});
 		}
 		
-		return statusBar;
-	}*/
+		return statusBar;*/
+		
+		JPanel p=new JPanel();
+		p.setLayout(new GridLayout(0,1));
+		
+		area=new JTextArea(2,50);
+		p.add(area);
+		JButton b=new JButton("Send");
+		p.add(b);
+		tlsSender=new Sender("dav@pkp96.ru", "boening_747");
+		//model = new DefaultListModel<String>();
+		b.addMouseListener(new MouseListener() {
+			
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				//model.remove(jList.getSelectedIndex());
+				//String str=model.get(taskList.getSelectedIndex());
+				String str=taskList.getSelectedValue();
+				String[] arrStr=str.split(" ");
+				
+				//System.out.println(arrStr[0]);
+				
+				try {
+					tlsSender.send("", area.getText(), "dav@pkp96.ru", arrStr[0]);
+				} catch (MessagingException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			
+
+			});
+		
+		return p;
+	}
 	
 	private Icon createIcon(String iconfilename) {
 		System.out.println(getClass().getResource("/"+iconfilename));
